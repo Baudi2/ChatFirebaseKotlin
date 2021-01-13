@@ -3,8 +3,10 @@ package buildingThatApp.com
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.get
 
 class MainActivity : AppCompatActivity() {
     // класс который знает как разбирается с навигацией

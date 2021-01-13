@@ -14,6 +14,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import buildingThatApp.com.databinding.RegisterFragmentBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -41,7 +42,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
 
         binding.alreadyHaveAccountTextView.setOnClickListener {
             Log.d("testingLog", "Navigating to the Login fragment")
-            val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+            val action = NavGraphDirections.actionGlobalLoginFragment()
             findNavController().navigate(action)
         }
     }
@@ -191,7 +192,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
             .addOnSuccessListener {
                 Log.d("testingLog", "Finally we saved the user to Firebase Database")
 
-                val action = NavGraphDirections.actionGlobalChatMainFragment()
+                val action = RegisterFragmentDirections.actionRegisterFragmentToChatMainFragment()
                 findNavController().navigate(action)
             }
             .addOnFailureListener {
