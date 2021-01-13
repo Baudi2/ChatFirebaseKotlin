@@ -185,7 +185,8 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
         // profileImageUrl is the file location of photo
-        val user = User(uid, binding.usernameEdittextRegister.text.toString(), profileImageUrl)
+        val user = User(uid, binding.usernameEdittextRegister.text.toString(),
+            profileImageUrl, binding.passwordEdittextRegister.text.toString())
 
         // now are going to send our data (user object) firebase db
         ref.setValue(user)
@@ -194,7 +195,6 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
 
                 val action = RegisterFragmentDirections.actionRegisterFragmentToChatMainFragment2()
                 findNavController().navigate(action)
-                //TODO: change animation so that this fragment appears from left
             }
             .addOnFailureListener {
                 Log.d("testingLog", "Failed to set value to database ${it.message}")
