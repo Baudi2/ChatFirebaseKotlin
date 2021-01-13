@@ -42,7 +42,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
 
         binding.alreadyHaveAccountTextView.setOnClickListener {
             Log.d("testingLog", "Navigating to the Login fragment")
-            val action = NavGraphDirections.actionGlobalLoginFragment()
+            val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment2()
             findNavController().navigate(action)
         }
     }
@@ -192,8 +192,9 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
             .addOnSuccessListener {
                 Log.d("testingLog", "Finally we saved the user to Firebase Database")
 
-                val action = RegisterFragmentDirections.actionRegisterFragmentToChatMainFragment()
+                val action = RegisterFragmentDirections.actionRegisterFragmentToChatMainFragment2()
                 findNavController().navigate(action)
+                //TODO: change animation so that this fragment appears from left
             }
             .addOnFailureListener {
                 Log.d("testingLog", "Failed to set value to database ${it.message}")

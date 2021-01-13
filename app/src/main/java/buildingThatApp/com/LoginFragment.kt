@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import buildingThatApp.com.databinding.LoginFragmentBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -23,7 +24,11 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
                 val singIn = FirebaseAuth.getInstance()
                 singIn.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener {
+                        if (!it.isSuccessful) return@addOnCompleteListener
 
+                        Log.d("testingLog", "Successfully logged in: ${it.result!!.user!!.uid}\"")
+                        val action = LoginFragmentDirections.actionLoginFragmentToChatMainFragment()
+                        findNavController().navigate(action)
                     }
                     .addOnFailureListener {
 

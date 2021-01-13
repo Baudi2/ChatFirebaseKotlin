@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/registerFragment">
+    app:startDestination="@id/chatMainFragment">
 
     <fragment
         android:id="@+id/registerFragment"
@@ -11,7 +11,7 @@
         android:label="register_fragment"
         tools:layout="@layout/register_fragment">
         <action
-            android:id="@+id/action_registerFragment_to_chatMainFragment"
+            android:id="@+id/action_registerFragment_to_chatMainFragment2"
             app:destination="@id/chatMainFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -19,22 +19,41 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/registerFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment2"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_in_top"
+            app:exitAnim="@anim/slide_out_bottom"
+            app:popEnterAnim="@anim/slide_in_bottom"
+            app:popExitAnim="@anim/slide_out_top" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="buildingThatApp.com.LoginFragment"
         android:label="login_fragment"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/login_fragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_chatMainFragment"
+            app:destination="@id/chatMainFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/chatMainFragment"
         android:name="buildingThatApp.com.ChatMainFragment"
         android:label="chat_main_layout"
         tools:layout="@layout/chat_main_fragment" />
     <action
-        android:id="@+id/action_global_loginFragment"
-        app:destination="@id/loginFragment"
-        app:enterAnim="@anim/slide_in_top"
-        app:exitAnim="@anim/slide_out_bottom"
-        app:popEnterAnim="@anim/slide_in_bottom"
-        app:popExitAnim="@anim/slide_out_top" />
+        android:id="@+id/action_global_registerFragment"
+        app:destination="@id/registerFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right"
+        app:popUpTo="@id/chatMainFragment"
+        app:popUpToInclusive="true" />
 </navigation>
