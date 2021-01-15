@@ -133,8 +133,6 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
                         )
                         binding.selectphotoImageviewRegister.setImageBitmap(bitmap)
                         binding.selectphotoButtonRegister.alpha = 0f
-                        //val bitmapDrawable = BitmapDrawable(this.resources, bitmap)
-                        //binding.selectphotoButtonRegister.background = bitmapDrawable
                     } else {
                         val source = ImageDecoder.createSource(
                             requireActivity().contentResolver,
@@ -143,8 +141,6 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
                         val bitmap = ImageDecoder.decodeBitmap(source)
                         binding.selectphotoImageviewRegister.setImageBitmap(bitmap)
                         binding.selectphotoButtonRegister.alpha = 0f
-                        //val bitmapDrawable = BitmapDrawable(this.resources, bitmap)
-                        //binding.selectphotoButtonRegister.background = bitmapDrawable
                     }
                 }
             } catch (e: Exception) {

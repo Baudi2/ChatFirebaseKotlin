@@ -41,7 +41,9 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_new_message -> {
-
+                // opens fragment where you can choose a new chat to start
+                val action = ChatMainFragmentDirections.actionChatMainFragmentToNewMessageFragment()
+                findNavController().navigate(action)
             }
             R.id.menu_sign_out -> {
                 // signing out of the account & navigation to registration screen

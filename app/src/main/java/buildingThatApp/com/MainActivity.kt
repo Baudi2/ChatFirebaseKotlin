@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.registerFragment -> "Registration"
                 R.id.loginFragment -> "Login"
                 R.id.chatMainFragment -> "Messenger"
+                R.id.newMessageFragment -> "Select User"
                 else -> "KotlinMessengerFirebase"
             }
         }
