@@ -1,10 +1,9 @@
-package buildingThatApp.com
+package buildingThatApp.com.registrationLogin
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.ImageDecoder
-import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,8 +13,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import buildingThatApp.com.R
+import buildingThatApp.com.models.User
 import buildingThatApp.com.databinding.RegisterFragmentBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -24,6 +24,10 @@ import java.lang.Exception
 import java.util.*
 
 class RegisterFragment : Fragment(R.layout.register_fragment) {
+
+    companion object{
+        private val LOG_TAG = "testingLog"
+    }
 
     private lateinit var binding: RegisterFragmentBinding
     private var selectedPhotoUri: Uri? = null
@@ -41,7 +45,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
         }
 
         binding.alreadyHaveAccountTextView.setOnClickListener {
-            Log.d("testingLog", "Navigating to the Login fragment")
+            Log.d(LOG_TAG, "Navigating to the Login fragment")
             val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment2()
             findNavController().navigate(action)
         }
@@ -63,9 +67,9 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
         val email = binding.emailEdittextRegister.text.toString()
         val password = binding.passwordEdittextRegister.text.toString()
 
-        Log.d("testingLog", "Username value is: $userName")
-        Log.d("testingLog", "Email value is: $email")
-        Log.d("testingLog", "Password value is: $password")
+        Log.d(LOG_TAG, "Username value is: $userName")
+        Log.d(LOG_TAG, "Email value is: $email")
+        Log.d(LOG_TAG, "Password value is: $password")
 
         // Getting access to the FireBase authenticator
         val myAuth = FirebaseAuth.getInstance()
@@ -82,7 +86,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
                     // else if successful
                     hideKeyboard(view)
                     Log.d(
-                        "testingLog",
+                        LOG_TAG,
                         "Successfully created user with uid: ${it.result?.user?.uid}"
                     )
 
@@ -91,7 +95,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
                 .addOnFailureListener {
                     // Checking whether or not the creation of a user went successfully.
                     hideKeyboard(view)
-                    Log.d("testingLog", "Failed to create user: ${it.message}")
+                    Log.d(LOG_TAG, "Failed to create user: ${it.message}")
                     Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
                 }
         } else {
@@ -101,7 +105,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
     }
 
     private fun forPhotoButton() {
-        Log.d("testingLog", "Try to show photo selector")
+        Log.d(LOG_TAG, "Try to show photo selector")
         // setting up intent to show photo selector. we ha to choose Action pick for photo selector
         val intent = Intent(Intent.ACTION_PICK)
         // setting the type of intent to tell it what we want to do
@@ -116,7 +120,7 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
         // making sure that we are use correct requestCode, that retrieving result from intent went successfully and that the data we got is not null
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             // proceed and check what the selected image was
-            Log.d("testingLog", "Photo was selected")
+            Log.d(LOG_TAG, "Photo was selected")
 
             /** Now we have to figure out what the photo actually is inside our app. through the [data] object we get we can access
              * to the uri of selected photo. Uri represent the location of where is the chosen photo is stored inside of the device.
@@ -160,11 +164,11 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
         // now we'll try to send our image file to firebase storage
         firebaseStorage.putFile(selectedPhotoUri!!)
             .addOnSuccessListener {
-                Log.d("testingLog", "Successfully uploaded image: ${it.metadata?.path}")
+                Log.d(LOG_TAG, "Successfully uploaded image: ${it.metadata?.path}")
 
                 //getting access to the file location
                 firebaseStorage.downloadUrl.addOnSuccessListener {
-                    Log.d("testingLog", "File location $it")
+                    Log.d(LOG_TAG, "File location $it")
 
                     saveUserToFirebaseDatabase(it.toString())
                 }
@@ -187,13 +191,13 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
         // now are going to send our data (user object) firebase db
         ref.setValue(user)
             .addOnSuccessListener {
-                Log.d("testingLog", "Finally we saved the user to Firebase Database")
+                Log.d(LOG_TAG, "Finally we saved the user to Firebase Database")
 
                 val action = RegisterFragmentDirections.actionRegisterFragmentToChatMainFragment2()
                 findNavController().navigate(action)
             }
             .addOnFailureListener {
-                Log.d("testingLog", "Failed to set value to database ${it.message}")
+                Log.d(LOG_TAG, "Failed to set value to database ${it.message}")
             }
     }
 }

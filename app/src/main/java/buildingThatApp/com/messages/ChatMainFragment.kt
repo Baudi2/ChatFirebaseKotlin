@@ -1,4 +1,4 @@
-package buildingThatApp.com
+package buildingThatApp.com.messages
 
 import android.os.Bundle
 import android.view.Menu
@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import buildingThatApp.com.R
 import buildingThatApp.com.databinding.ChatMainFragmentBinding
 import com.google.firebase.auth.FirebaseAuth
 

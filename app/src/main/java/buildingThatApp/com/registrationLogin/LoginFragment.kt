@@ -1,4 +1,4 @@
-package buildingThatApp.com
+package buildingThatApp.com.registrationLogin
 
 import android.content.Context
 import android.os.Bundle
@@ -8,6 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import buildingThatApp.com.R
 import buildingThatApp.com.databinding.LoginFragmentBinding
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception

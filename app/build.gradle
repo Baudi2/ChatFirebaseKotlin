@@ -74,4 +74,10 @@ dependencies {
 
     // MultiDex
     implementation 'com.android.support:multidex:1.0.3'
+
+    // Groupie RecyclerView
+    implementation 'com.xwray:groupie:2.8.1'
+
+    // Picasso Image caching
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
