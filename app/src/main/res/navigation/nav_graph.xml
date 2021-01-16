@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/registerFragment"
         android:name="buildingThatApp.com.registrationLogin.RegisterFragment"
-        android:label="register_fragment"
+        android:label="Registration"
         tools:layout="@layout/register_fragment">
         <action
             android:id="@+id/action_registerFragment_to_chatMainFragment2"
@@ -30,8 +30,8 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="buildingThatApp.com.registrationLogin.LoginFragment"
-        android:label="login_fragment"
-        tools:layout="@layout/login_fragment" >
+        android:label="Login"
+        tools:layout="@layout/login_fragment">
         <action
             android:id="@+id/action_loginFragment_to_chatMainFragment"
             app:destination="@id/chatMainFragment"
@@ -45,8 +45,8 @@
     <fragment
         android:id="@+id/chatMainFragment"
         android:name="buildingThatApp.com.messages.ChatMainFragment"
-        android:label="chat_main_layout"
-        tools:layout="@layout/chat_main_fragment" >
+        android:label="Messenger"
+        tools:layout="@layout/chat_main_fragment">
         <action
             android:id="@+id/action_chatMainFragment_to_newMessageFragment"
             app:destination="@id/newMessageFragment"
@@ -67,6 +67,6 @@
     <fragment
         android:id="@+id/newMessageFragment"
         android:name="buildingThatApp.com.messages.NewMessageFragment"
-        android:label="new_message_fragment"
+        android:label="Select User"
         tools:layout="@layout/new_message_fragment" />
 </navigation>

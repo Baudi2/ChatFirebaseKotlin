@@ -46,6 +46,7 @@ class LoginFragment : Fragment(R.layout.login_fragment) {
         }
 
         binding.backToRegisterTextView.setOnClickListener {
+            hideKeyboard(it)
             activity?.onBackPressed()
         }
     }
