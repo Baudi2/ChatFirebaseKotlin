@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import buildingThatApp.com.R
 import buildingThatApp.com.models.User
 import buildingThatApp.com.models.UserItem
@@ -27,19 +28,6 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
         super.onViewCreated(view, savedInstanceState)
         binding = NewMessageFragmentBinding.bind(view)
 
-        // creating an adapter for recyclerView via groupie external library
-        //val adapter = GroupAdapter<GroupieViewHolder>()
-
-        // we need to add objects to display in our adapter. UserItem is a class we made with 2 methods in it
-        // The difference between regular recyclerView here is that adapter.add(UserItem()) will show only one row,
-        // if we want to add more we'll have to call adapter.add() again
-        //adapter.add(UserItem())
-        //adapter.add(UserItem())
-        //adapter.add(UserItem())
-
-        // attaching generated adapter to the recyclerView
-        //binding.recyclerviewNewMessage.adapter = adapter
-
         fetchUsers()
     }
 
@@ -51,6 +39,7 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             // this method will get called every time we retrieve all of the users inside the firebase db
             override fun onDataChange(snapshot: DataSnapshot) {
+                // creating an adapter for recyclerView via groupie external library
                 // we are going to create a new adapter to fill it with user objects that we are going to fetch from firebase db
                 val adapter = GroupAdapter<GroupieViewHolder>()
 
@@ -64,6 +53,22 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
                         adapter.add(UserItem(user))
                     }
                 }
+                // handling item click so that onClick we'll open new fragment with chat
+                adapter.setOnItemClickListener { item, view ->
+                    // item refers to the actual row that recyclerView is rendering, so called current row on which we press
+
+                    // to get username out of item object and to be able to send it over to the chat screen we have to cast item as UserItem
+                    val userItem = item as UserItem
+
+                    // Then we just send the username over to the action since we can't navigate without passing username as an argument
+                    // We put this username into the label field of ChatLogFragment via nav_graph and we define in its label field with
+                    // pare of curly brackets that we want to put this argument into the label.
+                    val action = NewMessageFragmentDirections.actionNewMessageFragmentToChatLogFragment(userItem.user.username, userItem.user.profileImageUrl)
+                    /** In case if I'll later on need the ability to pass over to the ChatLogFragment whole user object, I'll have to go
+                     * back to part 05 time 27:50 and what the explanation of parcelables.*/
+                    findNavController().navigate(action)
+                }
+
                 binding.recyclerviewNewMessage.adapter = adapter
             }
 

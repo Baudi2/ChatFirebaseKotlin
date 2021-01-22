@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_main) as NavHostFragment
         navController = navHostFragment.findNavController()
 
+        // Тут мы определяем высокоуровневые экраны на которых back button не будет виден!
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.chatMainFragment, R.id.registerFragment, R.id.loginFragment)
         )
@@ -32,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() ||super.onSupportNavigateUp()
     }
+
+
 }
 /*
 below you can see the code that stupid people write

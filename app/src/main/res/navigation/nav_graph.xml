@@ -68,5 +68,27 @@
         android:id="@+id/newMessageFragment"
         android:name="buildingThatApp.com.messages.NewMessageFragment"
         android:label="Select User"
-        tools:layout="@layout/new_message_fragment" />
+        tools:layout="@layout/new_message_fragment" >
+        <action
+            android:id="@+id/action_newMessageFragment_to_chatLogFragment"
+            app:destination="@id/chatLogFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@+id/newMessageFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/chatLogFragment"
+        android:name="buildingThatApp.com.messages.ChatLogFragment"
+        android:label="{username}"
+        tools:layout="@layout/chat_log_fragment" >
+        <argument
+            android:name="username"
+            app:argType="string" />
+        <argument
+            android:name="user_photo"
+            app:argType="string" />
+    </fragment>
 </navigation>
