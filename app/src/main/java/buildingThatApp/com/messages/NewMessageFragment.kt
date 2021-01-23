@@ -21,7 +21,7 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
     private lateinit var binding: NewMessageFragmentBinding
 
     companion object{
-        private val NEW_MESSAGE_LOG = "NewMessage"
+        private const val NEW_MESSAGE_LOG = "NewMessage"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
 
     // In this method well be fetching users from firebase db specifying the path to were all users are
     private fun fetchUsers() {
-        var ref = FirebaseDatabase.getInstance().getReference("/users")
+        val ref = FirebaseDatabase.getInstance().getReference("/users")
         // now we need to add listener - Add a listener for a single change in the data at this location. -
         //  - this listener will be triggered once with the value of the data at the location
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -54,7 +54,7 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
                     }
                 }
                 // handling item click so that onClick we'll open new fragment with chat
-                adapter.setOnItemClickListener { item, view ->
+                adapter.setOnItemClickListener { item, _ ->
                     // item refers to the actual row that recyclerView is rendering, so called current row on which we press
 
                     // to get username out of item object and to be able to send it over to the chat screen we have to cast item as UserItem
@@ -63,7 +63,9 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
                     // Then we just send the username over to the action since we can't navigate without passing username as an argument
                     // We put this username into the label field of ChatLogFragment via nav_graph and we define in its label field with
                     // pare of curly brackets that we want to put this argument into the label.
-                    val action = NewMessageFragmentDirections.actionNewMessageFragmentToChatLogFragment(userItem.user.username, userItem.user.profileImageUrl)
+                    // passing here three arguments that we will need in the chat fragment
+                    val action = NewMessageFragmentDirections.actionNewMessageFragmentToChatLogFragment(
+                        userItem.user.username, userItem.user.profileImageUrl, userItem.user.uid)
                     /** In case if I'll later on need the ability to pass over to the ChatLogFragment whole user object, I'll have to go
                      * back to part 05 time 27:50 and what the explanation of parcelables.*/
                     findNavController().navigate(action)

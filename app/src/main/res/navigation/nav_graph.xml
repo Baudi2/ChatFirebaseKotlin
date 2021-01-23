@@ -90,5 +90,8 @@
         <argument
             android:name="user_photo"
             app:argType="string" />
+        <argument
+            android:name="to_uid"
+            app:argType="string" />
     </fragment>
 </navigation>
