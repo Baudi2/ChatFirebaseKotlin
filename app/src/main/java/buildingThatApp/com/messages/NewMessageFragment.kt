@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import buildingThatApp.com.R
 import buildingThatApp.com.models.User
 import buildingThatApp.com.models.UserItem
@@ -19,8 +20,9 @@ import com.xwray.groupie.GroupieViewHolder
 class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
 
     private lateinit var binding: NewMessageFragmentBinding
+    private val args: NewMessageFragmentArgs by navArgs()
 
-    companion object{
+    companion object {
         private const val NEW_MESSAGE_LOG = "NewMessage"
     }
 
@@ -64,8 +66,10 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
                     // We put this username into the label field of ChatLogFragment via nav_graph and we define in its label field with
                     // pare of curly brackets that we want to put this argument into the label.
                     // passing here three arguments that we will need in the chat fragment
-                    val action = NewMessageFragmentDirections.actionNewMessageFragmentToChatLogFragment(
-                        userItem.user.username, userItem.user.profileImageUrl, userItem.user.uid)
+                    val action =
+                        NewMessageFragmentDirections.actionNewMessageFragmentToChatLogFragment(
+                            userItem.user.username, userItem.user.profileImageUrl, userItem.user.uid, args.currentUserPhoto
+                        )
                     /** In case if I'll later on need the ability to pass over to the ChatLogFragment whole user object, I'll have to go
                      * back to part 05 time 27:50 and what the explanation of parcelables.*/
                     findNavController().navigate(action)
@@ -78,3 +82,9 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
         })
     }
 }
+
+
+
+
+
+

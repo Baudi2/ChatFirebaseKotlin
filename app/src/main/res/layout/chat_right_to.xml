@@ -18,17 +18,18 @@
         android:text="This is my message, and here I would like to try out how my To messages are going
 to look on da screen."
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
-        app:layout_constraintTop_toTopOf="@+id/imageView4" />
+        app:layout_constraintEnd_toStartOf="@+id/current_user_chat_imageview"
+        app:layout_constraintTop_toTopOf="@+id/current_user_chat_imageview" />
 
-    <ImageView
-        android:id="@+id/imageView4"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/current_user_chat_imageview"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/googleg_standard_color_18" />
+        app:civ_border_width="2dp"
+        app:civ_border_color="@color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

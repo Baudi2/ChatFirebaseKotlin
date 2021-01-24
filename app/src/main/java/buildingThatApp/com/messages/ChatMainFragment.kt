@@ -9,17 +9,25 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import buildingThatApp.com.R
 import buildingThatApp.com.databinding.ChatMainFragmentBinding
+import buildingThatApp.com.models.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
 
     private lateinit var binding: ChatMainFragmentBinding
+    private lateinit var currentUser: User
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ChatMainFragmentBinding.bind(view)
         // includes options menu for this fragment
         setHasOptionsMenu(true)
+        // here we will fetch current user's photo and send as an argument to the chat screen
+        fetchCurrentUser()
         verifyUserIsLoggedIn()
     }
 
@@ -43,7 +51,7 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
         when (item.itemId) {
             R.id.menu_new_message -> {
                 // opens fragment where you can choose a new chat to start
-                val action = ChatMainFragmentDirections.actionChatMainFragmentToNewMessageFragment()
+                val action = ChatMainFragmentDirections.actionChatMainFragmentToNewMessageFragment(currentUser.profileImageUrl)
                 findNavController().navigate(action)
             }
             R.id.menu_sign_out -> {
@@ -55,5 +63,21 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    /** Here we get our current user from Firebase db and then we send his photo as an argument to the newMessage fragment.
+     * There we send it to the chat screen and then we add to the adapter and apply the photo through viewHolder of that adapter*/
+    //TODO: because of some idiotic thing the whole app doesn't want to work. part 07 redo all the lesson and revert the to the last revert point. STUPID!
+    private fun fetchCurrentUser() {
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+
+        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                currentUser = snapshot.getValue(User::class.java)!!
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 }

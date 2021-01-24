@@ -44,6 +44,22 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
         binding.sendButtonChatLog.setOnClickListener {
             sendMessage()
         }
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.stackFromEnd = true
+        binding.recyclerviewChatLog.layoutManager = layoutManager
+
+        binding.recyclerviewChatLog.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+            if (bottom < oldBottom) {
+                binding.recyclerviewChatLog.postDelayed({
+                    if (binding.recyclerviewChatLog.adapter!!.itemCount != -1) {
+                        binding.recyclerviewChatLog.scrollToPosition(
+                            binding.recyclerviewChatLog.adapter!!.itemCount - 1
+                        )
+                    }
+                }, 100)
+            }
+        }
     }
 
     private fun listenForMessages() {
@@ -65,10 +81,11 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
 
                 // we will be using different viewHolder for adapter depending of whether or uid is of current user or of the other
                 if (chatMessage.fromId == FirebaseAuth.getInstance().uid) {
-                    adapter.add(ChatToItem(chatMessage.text))
+                    adapter.add(ChatToItem(chatMessage.text, args.currentUserPhoto))
                 } else {
-                    // adding object to our adapter to display them in chat fragment
-                    adapter.add(ChatFromItem(chatMessage.text))
+                    // adding object to our adapter to display them in chat fragment.
+                        // we send text of the message and photo of a user (user photo is the to whom we are writing)
+                    adapter.add(ChatFromItem(chatMessage.text, args.userPhoto))
                 }
             }
 
