@@ -16,6 +16,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
 
@@ -27,18 +31,22 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
         binding = ChatMainFragmentBinding.bind(view)
         // includes options menu for this fragment
         setHasOptionsMenu(true)
-        // here we will fetch current user's photo and send as an argument to the chat screen
-        fetchCurrentUser()
+
+        // here we make sure whether or not user have already logged in to our app or not, if not we sent him to the registration screen.
         verifyUserIsLoggedIn()
     }
 
 
-
+    // if user is not logged in we don't want to fetch his profile pic that's why we placed called to the fetchCurrentUser() -
+    // - method inside else statement, so that when he finally logs in when only then fetch his data (profile pic)
     private fun verifyUserIsLoggedIn() {
         val uid = FirebaseAuth.getInstance().uid
         if (uid == null) {
             val action = ChatMainFragmentDirections.actionGlobalRegisterFragment()
             findNavController().navigate(action)
+        } else {
+            // here we will fetch current user's photo and send as an argument to the chat screen
+            fetchCurrentUser()
         }
     }
 

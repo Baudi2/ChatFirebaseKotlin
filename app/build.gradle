@@ -80,4 +80,8 @@ dependencies {
 
     // Picasso Image caching
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 }
