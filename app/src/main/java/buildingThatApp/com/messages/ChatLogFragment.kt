@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import buildingThatApp.com.R
 import buildingThatApp.com.databinding.ChatLogFragmentBinding
 import buildingThatApp.com.models.ChatMessage
@@ -45,21 +46,17 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
             sendMessage()
         }
 
-        val layoutManager = LinearLayoutManager(requireContext())
-        layoutManager.stackFromEnd = true
-        binding.recyclerviewChatLog.layoutManager = layoutManager
-
-        binding.recyclerviewChatLog.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-            if (bottom < oldBottom) {
-                binding.recyclerviewChatLog.postDelayed({
-                    if (binding.recyclerviewChatLog.adapter!!.itemCount != -1) {
-                        binding.recyclerviewChatLog.scrollToPosition(
-                            binding.recyclerviewChatLog.adapter!!.itemCount - 1
-                        )
-                    }
-                }, 100)
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if (itemCount != -1 || itemCount != 0) {
+                    binding.recyclerviewChatLog.scrollToPosition(positionStart - itemCount +1)
+                }
             }
-        }
+
+            override fun onItemRangeRemoved(positionStart: Int, itemCount: Int) {
+                binding.recyclerviewChatLog.scrollToPosition(itemCount)
+            }
+        })
     }
 
     private fun listenForMessages() {
@@ -84,7 +81,7 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
                     adapter.add(ChatToItem(chatMessage.text, args.currentUserPhoto))
                 } else {
                     // adding object to our adapter to display them in chat fragment.
-                        // we send text of the message and photo of a user (user photo is the to whom we are writing)
+                    // we send text of the message and photo of a user (user photo is the to whom we are writing)
                     adapter.add(ChatFromItem(chatMessage.text, args.userPhoto))
                 }
             }
@@ -117,7 +114,7 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
         // making null check
         if (fromId == null) return
 
-        if(text.isNotEmpty()) {
+        if (text.isNotEmpty()) {
             // now here we have to pass quite a few parameters, those are id, text, fromId, toId, timeStamp. (important, this is our custom class)
             // we can get timestamp through System.currentTimeMillis() / 1000, the division is needed to turn milliseconds into regular seconds
             val chatMessage =
@@ -137,25 +134,5 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
 }
 
 
-/*
-// these lines of code are responsible for recyclerView correct positioning when we open keyboard
-        // (completely optional part: might as well delete it)
-        val layoutManager = LinearLayoutManager(requireContext())
-        layoutManager.stackFromEnd = true
-        binding.recyclerviewChatLog.layoutManager = layoutManager
-
-        binding.recyclerviewChatLog.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-            if (bottom < oldBottom) {
-                binding.recyclerviewChatLog.postDelayed({
-                    binding.recyclerviewChatLog.scrollToPosition(
-                        binding.recyclerviewChatLog.adapter!!.itemCount - 1
-                    )
-                }, 100)
-            }
-        }
-
-        I left this code here for now since when there is no messages and you try to open keyboard the app crushes.
-        I guess it is because there is no big difference between oldLayout and new one
- */
 
 

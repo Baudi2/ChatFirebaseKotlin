@@ -1,6 +1,7 @@
 package buildingThatApp.com.messages
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -19,7 +20,7 @@ import com.google.firebase.database.ValueEventListener
 class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
 
     private lateinit var binding: ChatMainFragmentBinding
-    private lateinit var currentUser: User
+    private lateinit var currentUser : User
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,6 +31,8 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
         fetchCurrentUser()
         verifyUserIsLoggedIn()
     }
+
+
 
     private fun verifyUserIsLoggedIn() {
         val uid = FirebaseAuth.getInstance().uid
@@ -65,14 +68,30 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
         return super.onOptionsItemSelected(item)
     }
 
-    /** Here we get our current user from Firebase db and then we send his photo as an argument to the newMessage fragment.
-     * There we send it to the chat screen and then we add to the adapter and apply the photo through viewHolder of that adapter*/
-    //TODO: because of some idiotic thing the whole app doesn't want to work. part 07 redo all the lesson and revert the to the last revert point. STUPID!
+
     private fun fetchCurrentUser() {
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+        Log.d("testingLog", "this is the uid: $uid")
 
-        ref.addListenerForSingleValueEvent(object: ValueEventListener {
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                currentUser = snapshot.getValue(User::class.java)!!
+                Log.d("testingLog", "this is the photo url: ${currentUser.profileImageUrl}")
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+
+    }
+}
+
+/*
+private fun fetchCurrentUser() {
+        val uid = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+
+        ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 currentUser = snapshot.getValue(User::class.java)!!
             }
@@ -80,4 +99,4 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
-}
+ */

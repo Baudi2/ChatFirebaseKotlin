@@ -10,6 +10,7 @@ import buildingThatApp.com.R
 import buildingThatApp.com.models.User
 import buildingThatApp.com.models.UserItem
 import buildingThatApp.com.databinding.NewMessageFragmentBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -81,6 +82,8 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
             override fun onCancelled(error: DatabaseError) {}
         })
     }
+
+
 }
 
 
