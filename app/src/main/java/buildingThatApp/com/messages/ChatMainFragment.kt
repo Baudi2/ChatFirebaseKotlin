@@ -22,6 +22,9 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
     private lateinit var binding: ChatMainFragmentBinding
     private lateinit var currentUser : User
     private val adapter = GroupAdapter<GroupieViewHolder>()
+    /** we'll use hashMap because without every time we write a message it would just add another object to the adapter
+     * instead of modifying existing one.*/
+    private val latestMessagesMap = HashMap<String, ChatMessage>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -98,16 +101,23 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
 
     private fun listenForLatestMessages() {
         val fromId = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/latest/messages/$fromId")
+        val ref = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId")
         // listening for the new nodes that are appearing underneath this reference
         ref.addChildEventListener(object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 // we are going to be notified every time we see new child for the latest messages
-                val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                adapter.add(ChatMainRow())
+                val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+                /** We will give this [latestMessagesMap] a key that belongs to the snapshot the key is actually recipients uid.
+                 * And every time we add new message inside this map we will refresh our adapter, and display new set of data*/
+                latestMessagesMap[snapshot.key!!] = chatMessage
+                refreshRecyclerViewMessages()
             }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val chatMessage = snapshot.getValue(ChatMessage::class.java) ?: return
+                latestMessagesMap[snapshot.key!!] = chatMessage
+                refreshRecyclerViewMessages()
+            }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {}
 
@@ -115,6 +125,15 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
 
             override fun onCancelled(error: DatabaseError) {}
         })
+    }
+
+    /** This will grab all of the chat messages that we've monitored so far and though loop we'll add them to recyclerView
+     * but before that we'll clear recyclerView of previous set of data, so every data changes it will redraw everything*/
+    private fun refreshRecyclerViewMessages() {
+        adapter.clear()
+        latestMessagesMap.values.forEach {
+            adapter.add(ChatMainRow(it))
+        }
     }
 }
 

@@ -147,9 +147,9 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
         val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
         // including third reference for latest messages. since we are not using .push() call here when we send new message -
         // - firebase wont create different node for it and instead will override the text from existing one hence the name latest message
-        val latestMessageRef = FirebaseDatabase.getInstance().getReference("latest-messages/$fromId/$toId")
+        val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
         // same as toReference
-        val latestMessageToRef = FirebaseDatabase.getInstance().getReference("latest-messages/$toId/$fromId")
+        val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
 
             if (text.isNotEmpty()) {
             // now here we have to pass quite a few parameters, those are id, text, fromId, toId, timeStamp. (important, this is our custom class)
@@ -175,8 +175,11 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+        val view = activity?.currentFocus
+        if (view != null) {
+            val imn = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imn.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 }
 
