@@ -81,6 +81,9 @@
         <argument
             android:name="current_user_photo"
             app:argType="string" />
+        <argument
+            android:name="current_user_uid"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/chatLogFragment"

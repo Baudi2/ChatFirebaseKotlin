@@ -51,7 +51,10 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
                     Log.d(NEW_MESSAGE_LOG, it.toString())
                     // converting the value that we receive into user object to work with them easier
                     val user = it.getValue(User::class.java)
-                    if (user != null) {
+                    /** Before loading data into the recyclerView adapter we are making sure that first of all
+                     * the object we receive is not null and also we check if the object we receive has the same uid
+                     * as the currently logged in user, if that's the case we don't load that object.*/
+                    if (user != null && user.uid != args.currentUserUid) {
                         // adding userItem object to our adapter and then attaching it to recyclerView
                         adapter.add(UserItem(user))
                     }

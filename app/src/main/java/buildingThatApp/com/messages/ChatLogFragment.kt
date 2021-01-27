@@ -1,11 +1,15 @@
 package buildingThatApp.com.messages
 
+import android.app.Activity
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -141,8 +145,13 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
         val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
         // this reference if for user to whom we are writing so that the message we write to him will show up on his screen as well
         val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
+        // including third reference for latest messages. since we are not using .push() call here when we send new message -
+        // - firebase wont create different node for it and instead will override the text from existing one hence the name latest message
+        val latestMessageRef = FirebaseDatabase.getInstance().getReference("latest-messages/$fromId/$toId")
+        // same as toReference
+        val latestMessageToRef = FirebaseDatabase.getInstance().getReference("latest-messages/$toId/$fromId")
 
-        if (text.isNotEmpty()) {
+            if (text.isNotEmpty()) {
             // now here we have to pass quite a few parameters, those are id, text, fromId, toId, timeStamp. (important, this is our custom class)
             // we can get timestamp through System.currentTimeMillis() / 1000, the division is needed to turn milliseconds into regular seconds
             val chatMessage =
@@ -157,7 +166,17 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
                 }
 
             toReference.setValue(chatMessage)
+
+            latestMessageRef.setValue(chatMessage)
+
+            latestMessageToRef.setValue(chatMessage)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 }
 

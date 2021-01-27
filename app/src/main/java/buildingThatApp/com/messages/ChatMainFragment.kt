@@ -10,30 +10,33 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import buildingThatApp.com.R
 import buildingThatApp.com.databinding.ChatMainFragmentBinding
+import buildingThatApp.com.models.ChatMessage
 import buildingThatApp.com.models.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.google.firebase.database.*
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 
 class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
 
     private lateinit var binding: ChatMainFragmentBinding
     private lateinit var currentUser : User
+    private val adapter = GroupAdapter<GroupieViewHolder>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ChatMainFragmentBinding.bind(view)
         // includes options menu for this fragment
         setHasOptionsMenu(true)
-
         // here we make sure whether or not user have already logged in to our app or not, if not we sent him to the registration screen.
         verifyUserIsLoggedIn()
+        //attaching adapter to the recyclerView
+        binding.recyclerViewChatMainFragment.adapter = adapter
+        // here we will be listening for latest messages
+        listenForLatestMessages()
+
+        //TODO: setup text view in [chat_main_fragment] layout that will display text saying "you have no chats yet" -
+    // - TODO: if the user have chatted anyone yet, and hide if that statement is no longer valid.
     }
 
 
@@ -62,7 +65,7 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
         when (item.itemId) {
             R.id.menu_new_message -> {
                 // opens fragment where you can choose a new chat to start
-                val action = ChatMainFragmentDirections.actionChatMainFragmentToNewMessageFragment(currentUser.profileImageUrl)
+                val action = ChatMainFragmentDirections.actionChatMainFragmentToNewMessageFragment(currentUser.profileImageUrl, currentUser.uid)
                 findNavController().navigate(action)
             }
             R.id.menu_sign_out -> {
@@ -92,19 +95,32 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
         })
 
     }
-}
 
-/*
-private fun fetchCurrentUser() {
-        val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-
-        ref.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                currentUser = snapshot.getValue(User::class.java)!!
+    private fun listenForLatestMessages() {
+        val fromId = FirebaseAuth.getInstance().uid
+        val ref = FirebaseDatabase.getInstance().getReference("/latest/messages/$fromId")
+        // listening for the new nodes that are appearing underneath this reference
+        ref.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                // we are going to be notified every time we see new child for the latest messages
+                val chatMessage = snapshot.getValue(ChatMessage::class.java)
+                adapter.add(ChatMainRow())
             }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
             override fun onCancelled(error: DatabaseError) {}
         })
     }
- */
+}
+
+
+
+
+
+
+
