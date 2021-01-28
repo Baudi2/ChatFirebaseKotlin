@@ -11,29 +11,34 @@
         android:id="@+id/recyclerview_chat_log"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:background="@android:color/holo_green_light"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/edittext_chat_log"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="8dp"/>
 
     <EditText
+        android:paddingBottom="18dp"
+        android:paddingEnd="18dp"
+        android:paddingStart="8dp"
+        android:paddingTop="12dp"
         android:id="@+id/edittext_chat_log"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@color/white"
-        android:ems="10"
         android:hint="@string/enter_message"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
+        android:maxLines="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send_button_chat_log"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="Autofill" />
+        app:layout_constraintTop_toTopOf="@+id/send_button_chat_log"
+        tools:ignore="Autofill,TextFields" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/send_button_chat_log"
