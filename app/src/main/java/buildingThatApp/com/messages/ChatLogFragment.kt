@@ -1,15 +1,12 @@
 package buildingThatApp.com.messages
 
-import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import buildingThatApp.com.R
 import buildingThatApp.com.databinding.ChatLogFragmentBinding
 import buildingThatApp.com.models.ChatMessage
+import buildingThatApp.com.views.ChatFromItem
+import buildingThatApp.com.views.ChatToItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -55,7 +54,7 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 if (itemCount != -1 || itemCount != 0) {
-                    binding.recyclerviewChatLog.scrollToPosition(positionStart - itemCount +1)
+                    binding.recyclerviewChatLog.scrollToPosition(positionStart - itemCount + 1)
                 }
             }
 
@@ -142,16 +141,20 @@ class ChatLogFragment : Fragment(R.layout.chat_log_fragment) {
          *  in new path we create new node called user-messages and inside that node we create unique node that contains uid of current user
          *  and user to whom we are writing. This way we insure that only these aforementioned users can access those messages.*/
         //val reference = FirebaseDatabase.getInstance().getReference("/messages").push() - old version
-        val reference = FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
+        val reference =
+            FirebaseDatabase.getInstance().getReference("/user-messages/$fromId/$toId").push()
         // this reference if for user to whom we are writing so that the message we write to him will show up on his screen as well
-        val toReference = FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
+        val toReference =
+            FirebaseDatabase.getInstance().getReference("/user-messages/$toId/$fromId").push()
         // including third reference for latest messages. since we are not using .push() call here when we send new message -
         // - firebase wont create different node for it and instead will override the text from existing one hence the name latest message
-        val latestMessageRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        val latestMessageRef =
+            FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
         // same as toReference
-        val latestMessageToRef = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+        val latestMessageToRef =
+            FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
 
-            if (text.isNotEmpty()) {
+        if (text.isNotEmpty()) {
             // now here we have to pass quite a few parameters, those are id, text, fromId, toId, timeStamp. (important, this is our custom class)
             // we can get timestamp through System.currentTimeMillis() / 1000, the division is needed to turn milliseconds into regular seconds
             val chatMessage =

@@ -15,11 +15,11 @@
         android:background="@drawable/rounded_edit_text"
         android:maxWidth="240dp"
         android:padding="16dp"
-        android:text="This is my message, and here I would like to try out how my To messages are going
-to look on da screen."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/current_user_chat_imageview"
-        app:layout_constraintTop_toTopOf="@+id/current_user_chat_imageview" />
+        app:layout_constraintTop_toTopOf="@+id/current_user_chat_imageview"
+        tools:text="This is my message, and here I would like to try out how my To messages are going
+to look on da screen." />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/current_user_chat_imageview"
@@ -27,9 +27,9 @@ to look on da screen."
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:civ_border_color="@color/white"
         app:civ_border_width="2dp"
-        app:civ_border_color="@color/white"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package buildingThatApp.com.messages
+package buildingThatApp.com.views
 
 import android.widget.ImageView
 import android.widget.TextView
@@ -7,7 +7,7 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 
-class ChatFromItem(val text: String, val userPhoto : String) : Item<GroupieViewHolder>() {
+class ChatFromItem(val text: String, private val userPhoto: String) : Item<GroupieViewHolder>() {
     // To change the text inside the bubbles (message windows) we'll be using this method. Same in ChatToItem
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         // getting access to the textView which display the message text. Same can be done in ChatToItem

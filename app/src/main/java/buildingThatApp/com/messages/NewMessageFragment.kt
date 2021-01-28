@@ -10,7 +10,6 @@ import buildingThatApp.com.R
 import buildingThatApp.com.models.User
 import buildingThatApp.com.models.UserItem
 import buildingThatApp.com.databinding.NewMessageFragmentBinding
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -72,7 +71,10 @@ class NewMessageFragment : Fragment(R.layout.new_message_fragment) {
                     // passing here three arguments that we will need in the chat fragment
                     val action =
                         NewMessageFragmentDirections.actionNewMessageFragmentToChatLogFragment(
-                            userItem.user.username, userItem.user.profileImageUrl, userItem.user.uid, args.currentUserPhoto
+                            userItem.user.username,
+                            userItem.user.profileImageUrl,
+                            userItem.user.uid,
+                            args.currentUserPhoto
                         )
                     /** In case if I'll later on need the ability to pass over to the ChatLogFragment whole user object, I'll have to go
                      * back to part 05 time 27:50 and what the explanation of parcelables.*/

@@ -25,8 +25,8 @@ import java.util.*
 
 class RegisterFragment : Fragment(R.layout.register_fragment) {
 
-    companion object{
-        private val LOG_TAG = "testingLog"
+    companion object {
+        private const val LOG_TAG = "testingLog"
     }
 
     private lateinit var binding: RegisterFragmentBinding
@@ -185,8 +185,10 @@ class RegisterFragment : Fragment(R.layout.register_fragment) {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
         // profileImageUrl is the file location of photo
-        val user = User(uid, binding.usernameEdittextRegister.text.toString(),
-            profileImageUrl, binding.passwordEdittextRegister.text.toString())
+        val user = User(
+            uid, binding.usernameEdittextRegister.text.toString(),
+            profileImageUrl, binding.passwordEdittextRegister.text.toString()
+        )
 
         // now are going to send our data (user object) firebase db
         ref.setValue(user)

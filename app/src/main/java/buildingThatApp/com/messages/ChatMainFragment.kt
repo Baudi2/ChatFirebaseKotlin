@@ -8,10 +8,12 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import buildingThatApp.com.R
 import buildingThatApp.com.databinding.ChatMainFragmentBinding
 import buildingThatApp.com.models.ChatMessage
 import buildingThatApp.com.models.User
+import buildingThatApp.com.views.ChatMainRow
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.xwray.groupie.GroupAdapter
@@ -20,8 +22,10 @@ import com.xwray.groupie.GroupieViewHolder
 class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
 
     private lateinit var binding: ChatMainFragmentBinding
-    private lateinit var currentUser : User
+    private lateinit var currentUser: User
     private val adapter = GroupAdapter<GroupieViewHolder>()
+
+
     /** we'll use hashMap because without every time we write a message it would just add another object to the adapter
      * instead of modifying existing one.*/
     private val latestMessagesMap = HashMap<String, ChatMessage>()
@@ -29,17 +33,24 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = ChatMainFragmentBinding.bind(view)
+        //attaching adapter to the recyclerView
+        binding.recyclerViewChatMainFragment.adapter = adapter
+        binding.recyclerViewChatMainFragment.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(), DividerItemDecoration.VERTICAL
+            )
+        )
+
+
         // includes options menu for this fragment
         setHasOptionsMenu(true)
         // here we make sure whether or not user have already logged in to our app or not, if not we sent him to the registration screen.
         verifyUserIsLoggedIn()
-        //attaching adapter to the recyclerView
-        binding.recyclerViewChatMainFragment.adapter = adapter
         // here we will be listening for latest messages
         listenForLatestMessages()
 
         //TODO: setup text view in [chat_main_fragment] layout that will display text saying "you have no chats yet" -
-    // - TODO: if the user have chatted anyone yet, and hide if that statement is no longer valid.
+        // - TODO: if the user have chatted anyone yet, and hide if that statement is no longer valid.
     }
 
 
@@ -53,6 +64,19 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
         } else {
             // here we will fetch current user's photo and send as an argument to the chat screen
             fetchCurrentUser()
+            //set item click listener on your adapter
+            adapter.setOnItemClickListener { item, _ ->
+                // we are going to safe cast the row object with the data we need to object from which we can extract data (item)
+                val sentUser = item as ChatMainRow
+                // here we combine the argument we need to send over and navigate
+                val action = ChatMainFragmentDirections.actionChatMainFragmentToChatLogFragment(
+                    sentUser.chatPartnerUser.username,
+                    sentUser.chatPartnerUser.profileImageUrl,
+                    sentUser.chatPartnerUser.uid,
+                    currentUser.profileImageUrl
+                )
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -68,7 +92,10 @@ class ChatMainFragment : Fragment(R.layout.chat_main_fragment) {
         when (item.itemId) {
             R.id.menu_new_message -> {
                 // opens fragment where you can choose a new chat to start
-                val action = ChatMainFragmentDirections.actionChatMainFragmentToNewMessageFragment(currentUser.profileImageUrl, currentUser.uid)
+                val action = ChatMainFragmentDirections.actionChatMainFragmentToNewMessageFragment(
+                    currentUser.profileImageUrl,
+                    currentUser.uid
+                )
                 findNavController().navigate(action)
             }
             R.id.menu_sign_out -> {
